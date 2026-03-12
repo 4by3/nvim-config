@@ -6,6 +6,9 @@
 local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true, desc = "" }
 
+vim.keymap.set("i", "<A-BS>", "<C-w>", { noremap = true })
+vim.keymap.set("i", "<A-Del>", "<C-o>dw", { noremap = true })
+
 keymap("n", "<C-d>", "<C-d>zz", vim.tbl_extend("force", opts, { desc = "Scroll down & center" }))
 keymap("n", "<C-u>", "<C-u>zz", vim.tbl_extend("force", opts, { desc = "Scroll up & center" }))
 keymap(

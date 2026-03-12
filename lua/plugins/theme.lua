@@ -1,1 +1,0 @@
-/home/fbyt/.config/omarchy/current/theme/neovim.lua

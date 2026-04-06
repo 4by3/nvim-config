@@ -18,6 +18,9 @@ keymap(
   { desc = "Trouble: workspace diagnostics", silent = true }
 )
 
+vim.keymap.set("i", "<A-BS>", "<C-w>", { noremap = true })
+vim.keymap.set("i", "<A-Del>", "<C-o>dw", { noremap = true })
+
 vim.keymap.set("n", "<leader>rr", "<cmd>wincmd =<cr>", { desc = "Restore window sizes" })
 
 vim.keymap.set({ "n", "t" }, "<c-/>", function()

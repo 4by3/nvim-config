@@ -6,11 +6,11 @@
 
 vim.opt.relativenumber = true
 
-vim.opt.clipboard = "unnamedplus"
-
 vim.opt.wrap = true
 
--- vim.g.clipboard = {
+vim.opt.clipboard = ""
+
+-- vimvim.opt.clipboard = "".g.clipboard = {
 --   name = "wl-clipboard",
 --   copy = {
 --     ["+"] = { "wl-copy", "--foreground", "--type", "text/plain" },

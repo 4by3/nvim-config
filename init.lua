@@ -1,3 +1,12 @@
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "markdown",
+	callback = function()
+		vim.opt_local.spell = true
+		vim.opt_local.spelllang = 'en_au'
+	end,
+})
+
+
 -- Spam Ctrl < and Ctrl >
 vim.keymap.set("v", ">", ">gv")
 vim.keymap.set("v", "<", "<gv")
@@ -17,7 +26,8 @@ end
 vim.opt.undodir = undodir
 vim.opt.undofile = true
 
-
+-- Wrap at word boundary
+vim.opt.linebreak = true
 -- Alt backspace
 vim.keymap.set("i", "<A-BS>", "<C-w>", { noremap = true })
 vim.keymap.set("i", "<A-Del>", "<C-o>dw", { noremap = true })
@@ -134,9 +144,11 @@ vim.api.nvim_create_autocmd('InsertLeave', {
 
 -- Plugins
 vim.pack.add({
+	'https://github.com/lervag/vimtex',
 	'https://github.com/windwp/nvim-autopairs',
 	'https://github.com/folke/which-key.nvim',
 	'https://github.com/ibhagwan/fzf-lua',
+	'https://github.com/3rd/image.nvim',
 	'https://github.com/nvim-treesitter/nvim-treesitter',
 	'https://github.com/neovim/nvim-lspconfig',
 	'https://github.com/mason-org/mason.nvim',
@@ -155,7 +167,68 @@ vim.pack.add({
 	{ src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('1.x') }, -- pinning so rust binary dependency automatically downloads
 })
 
+
+--- vimtex zathura
+vim.g.vimtex_view_method = "zathura"
+vim.g.vimtex_view_forward_search_on_start = false
+vim.g.vimtex_compiler_latexmk = {
+	aux_dir = "/home/fbyt/Notes/1Uni/Latex/.texfiles",
+	out_dir = "/home/fbyt/Notes/1Uni/Latex/.texfiles",
+}
+
 require('mason').setup()
+
+require("image").setup({
+	backend = "kitty", -- or "ueberzug" or "sixel"
+	processor = "magick_cli", -- or "magick_rock"
+	integrations = {
+		markdown = {
+			enabled = true,
+			clear_in_insert_mode = false,
+			download_remote_images = true,
+			only_render_image_at_cursor = false,
+			only_render_image_at_cursor_mode = "popup", -- or "inline"
+			floating_windows = false, -- if true, images will be rendered in floating markdown windows
+			filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
+		},
+		asciidoc = {
+			enabled = true,
+			clear_in_insert_mode = false,
+			download_remote_images = true,
+			only_render_image_at_cursor = false,
+			only_render_image_at_cursor_mode = "popup",
+			floating_windows = false,
+			filetypes = { "asciidoc", "adoc" },
+		},
+		neorg = {
+			enabled = true,
+			filetypes = { "norg" },
+		},
+		rst = {
+			enabled = true,
+		},
+		typst = {
+			enabled = true,
+			filetypes = { "typst" },
+		},
+		html = {
+			enabled = false,
+		},
+		css = {
+			enabled = false,
+		},
+	},
+	max_width = nil,
+	max_height = nil,
+	max_width_window_percentage = nil,
+	max_height_window_percentage = 50,
+	scale_factor = 1.0,
+	window_overlap_clear_enabled = false,                                        -- toggles images when windows are overlapped
+	window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "snacks_notif", "scrollview", "scrollview_sign" },
+	editor_only_render_when_focused = false,                                     -- auto show/hide images when the editor gains/looses focus
+	tmux_show_only_in_active_window = false,                                     -- auto show/hide images in the correct Tmux window (needs visual-activity off)
+	hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" }, -- render image files as images when opened
+})
 
 require('nvim-autopairs').setup({})
 
@@ -179,6 +252,10 @@ vim.cmd('colorscheme kanagawa-wave') -- need to call after setup
 -- 	-- linewise_hybrid_mode = true,
 -- 	-- hybrid_modes = { "n", "i" },
 -- })
+
+vim.api.nvim_set_hl(0, "@markup.strong", { bold = true })
+vim.api.nvim_set_hl(0, "@markup.strong.markdown", { bold = true })
+
 require("markview").setup({
 	preview = {
 		enable = true,
@@ -224,6 +301,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 -- LSP
 vim.lsp.enable({
+	-- 'harper_ls',
 	'ty', -- also $ uv tool install ty@latest
 	'ruff', -- also $ uv tool install ruff@latest
 	'lua_ls', -- also $ brew install lua-language-server
@@ -235,6 +313,8 @@ vim.lsp.enable({
 	'clangd',
 	'ts_ls',
 })
+
+
 vim.o.signcolumn = 'yes' -- make lsp warnings not widen the gutter
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to definition' })
 -- Auto-format ("lint") on save (adapted from neovim docs :help auto-format)
